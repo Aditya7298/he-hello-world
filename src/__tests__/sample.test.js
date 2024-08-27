@@ -23,6 +23,6 @@ test("should add a row with correct roll number and marks in order of insertion"
   fireEvent.click(screen.getByText("Add Student"));
 
   const rows = screen.getAllByRole("row");
-  expect(rows[1].textContent).toBe("10185");
-  expect(rows[2].textContent).toBe("3490");
+  expect(rows[2].textContent).toBe("10185");
+  expect(rows[3].textContent).toBe("3490");
 });

@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const MarksTable = () => {
-  const [students, setStudents] = useState({ 0: "12" });
-  const [rollNumber, setRollNumber] = useState("");
-  const [marks, setMarks] = useState("");
+  const [students, setStudents] = useState({});
+  const [rollNumber, setRollNumber] = useState('');
+  const [marks, setMarks] = useState('');
 
   const addStudent = (e) => {
     e.preventDefault();
@@ -14,8 +14,8 @@ const MarksTable = () => {
       ...students,
       [rollNumberKey]: marks,
     });
-    setRollNumber("");
-    setMarks("");
+    setRollNumber('');
+    setMarks('');
   };
 
   return (
@@ -36,7 +36,7 @@ const MarksTable = () => {
         />
         <button type="submit">Add Student</button>
       </form>
-      <table border="1" style={{ marginTop: "10px", width: "100%" }}>
+      <table border="1" style={{ marginTop: '10px', width: '100%' }}>
         <thead>
           <tr>
             <th>Roll Number</th>
@@ -58,6 +58,8 @@ const MarksTable = () => {
 
 export default function App() {
   return (
-    <MarksTable />
+    <div style={{ textAlign: 'center' }}>
+      <MarksTable />
+    </div>
   );
 }

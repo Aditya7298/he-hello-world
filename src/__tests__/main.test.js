@@ -23,8 +23,8 @@ describe('Running tests', () => {
     fireEvent.click(screen.getByText('Add Student'));
 
     const rows = screen.getAllByRole('row');
-    expect(rows[2].textContent).toBe('10185');
-    expect(rows[3].textContent).toBe('3490');
+    expect(rows[1].textContent).toBe('10185');
+    expect(rows[2].textContent).toBe('3490');
   });
 
   test('should be able to edit existing entry in the table', () => {
@@ -39,7 +39,7 @@ describe('Running tests', () => {
     fireEvent.click(screen.getByText('Add Student'));
 
     let rows = screen.getAllByRole('row');
-    expect(rows[2].textContent).toBe('10185');
+    expect(rows[1].textContent).toBe('10185');
 
     fireEvent.change(screen.getByPlaceholderText('Enter roll number'), {
       target: { value: '101' },
@@ -50,6 +50,6 @@ describe('Running tests', () => {
     fireEvent.click(screen.getByText('Add Student'));
 
     rows = screen.getAllByRole('row');
-    expect(rows[2].textContent).toBe('10190');
+    expect(rows[1].textContent).toBe('10190');
   });
 });

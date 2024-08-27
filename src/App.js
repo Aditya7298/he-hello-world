@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import './styles.css';
 
 const MarksTable = () => {
-  const [students, setStudents] = useState({ 1: 45 });
+  const [students, setStudents] = useState({});
   const [rollNumber, setRollNumber] = useState('');
   const [marks, setMarks] = useState('');
 
@@ -48,12 +48,22 @@ const MarksTable = () => {
           </tr>
         </thead>
         <tbody>
-          {Object.keys(students).map((rollNumber) => (
-            <tr key={rollNumber}>
-              <td>{rollNumber}</td>
-              <td>{students[rollNumber]}</td>
+          {Object.keys(students).length ? (
+            Object.keys(students).map((rollNumber) => (
+              <tr key={rollNumber}>
+                <td>{rollNumber}</td>
+                <td>{students[rollNumber]}</td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="2">
+                <div className="emptyState">
+                  Enter student details above to get started
+                </div>
+              </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>

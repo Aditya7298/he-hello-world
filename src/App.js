@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 
+import './styles.css';
+
 const MarksTable = () => {
-  const [students, setStudents] = useState({});
+  const [students, setStudents] = useState({ 1: 45 });
   const [rollNumber, setRollNumber] = useState('');
   const [marks, setMarks] = useState('');
 
@@ -19,7 +21,7 @@ const MarksTable = () => {
   };
 
   return (
-    <div>
+    <div className="marksTable">
       <h2>Students' Marks Table</h2>
       <form onSubmit={addStudent}>
         <input
@@ -27,16 +29,18 @@ const MarksTable = () => {
           value={rollNumber}
           onChange={(e) => setRollNumber(e.target.value)}
           placeholder="Enter roll number"
+          required
         />
         <input
-          type="text"
+          type="number"
           value={marks}
           onChange={(e) => setMarks(e.target.value)}
           placeholder="Enter marks"
+          required
         />
         <button type="submit">Add Student</button>
       </form>
-      <table border="1" style={{ marginTop: '10px', width: '100%' }}>
+      <table border="2">
         <thead>
           <tr>
             <th>Roll Number</th>
@@ -58,7 +62,7 @@ const MarksTable = () => {
 
 export default function App() {
   return (
-    <div style={{ textAlign: 'center' }}>
+    <div className="app">
       <MarksTable />
     </div>
   );

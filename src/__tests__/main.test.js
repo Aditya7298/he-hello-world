@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 describe('Running tests', () => {
-  test('should add a row with correct roll number and marks in order of insertion', () => {
+  test('1', () => {
     render(<App />);
 
     fireEvent.change(screen.getByPlaceholderText('Enter roll number'), {
@@ -27,7 +27,7 @@ describe('Running tests', () => {
     expect(rows[2].textContent).toBe('3490');
   });
 
-  test('should be able to edit existing entry in the table', () => {
+  test('2', () => {
     render(<App />);
 
     fireEvent.change(screen.getByPlaceholderText('Enter roll number'), {
@@ -35,6 +35,14 @@ describe('Running tests', () => {
     });
     fireEvent.change(screen.getByPlaceholderText('Enter marks'), {
       target: { value: '85' },
+    });
+    fireEvent.click(screen.getByText('Add Student'));
+
+    fireEvent.change(screen.getByPlaceholderText('Enter roll number'), {
+      target: { value: '1' },
+    });
+    fireEvent.change(screen.getByPlaceholderText('Enter marks'), {
+      target: { value: '35' },
     });
     fireEvent.click(screen.getByText('Add Student'));
 
@@ -53,7 +61,7 @@ describe('Running tests', () => {
     expect(rows[1].textContent).toBe('10190');
   });
 
-  test('the number of entries in the table should be same after adding and updating', () => {
+  test('3', () => {
     render(<App />);
 
     fireEvent.change(screen.getByPlaceholderText('Enter roll number'), {

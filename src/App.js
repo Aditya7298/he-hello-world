@@ -3,59 +3,13 @@ import JSONEditor from 'jsoneditor';
 import defaultInput from './defaultInput';
 import 'jsoneditor/dist/jsoneditor.css';
 
-function semverMatches(version, constraint) {
-  if (!constraint.includes('^') && !constraint.includes('~')) {
-    return version === constraint;
-  }
-
-  const [major, minor, patch] = version.split('.').map(Number);
-  const [cMajor, cMinor, cPatch] = constraint.slice(1).split('.').map(Number);
-
-  if (constraint.startsWith('^')) {
-    return (
-      major === cMajor &&
-      (minor > cMinor || (minor === cMinor && patch >= cPatch))
-    );
-  } else if (constraint.startsWith('~')) {
-    return major === cMajor && minor === cMinor && patch >= cPatch;
-  }
-  return false;
-}
-
-function getHighestVersion(available, constraint) {
-  for (let i = available.length - 1; i >= 0; i--) {
-    if (semverMatches(available[i], constraint)) {
-      return available[i];
-    }
-  }
-  return null;
-}
-
 export function countUniqueLibraries(
   dependencies,
   availableVersions,
   libDependencies
 ) {
-  const installed = new Set();
-
-  function resolveLibrary(lib, constraint) {
-    const available = availableVersions[lib];
-    const version = getHighestVersion(available, constraint);
-    if (!version || installed.has(`${lib}@${version}`)) return;
-
-    installed.add(`${lib}@${version}`);
-
-    const deps = (libDependencies[lib] && libDependencies[lib][version]) || {};
-    for (const [depLib, depConstraint] of Object.entries(deps)) {
-      resolveLibrary(depLib, depConstraint);
-    }
-  }
-
-  for (const [lib, constraint] of Object.entries(dependencies)) {
-    resolveLibrary(lib, constraint);
-  }
-
-  return installed.size;
+  //complete this function
+  return 0;
 }
 
 export default function App() {
@@ -83,12 +37,6 @@ export default function App() {
     const { availableVersions, dependencies, libDependencies } =
       jsonEditor.current.get();
 
-    console.log(
-      availableVersions,
-      dependencies,
-      libDependencies,
-      countUniqueLibraries(dependencies, availableVersions, libDependencies)
-    );
     setOutput(
       countUniqueLibraries(dependencies, availableVersions, libDependencies)
     );

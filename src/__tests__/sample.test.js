@@ -1,4 +1,4 @@
-const { countUniqueLibraries } = require('./index.js');
+const { countUniqueLibraries } = require('../App');
 
 // Sample test cases
 test('Test Case 1', () => {

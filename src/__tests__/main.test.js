@@ -1,4 +1,4 @@
-const { countUniqueLibraries } = require('../App');
+const { countUniqueLibraries } = require('../countUniqueLibraries');
 
 test('Test Case 1', () => {
   const dependencies = {

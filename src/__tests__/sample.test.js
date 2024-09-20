@@ -1,95 +1,48 @@
-import App from '../App';
-import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom';
+const { countUniqueLibraries } = require('./index.js');
 
-describe('Running tests', () => {
-  test('should add a row with correct roll number and marks in order of insertion', () => {
-    render(<App />);
+// Sample test cases
+test('Test Case 1', () => {
+  const dependencies = {
+    app: '^1.0.0',
+  };
 
-    fireEvent.change(screen.getByPlaceholderText('Enter roll number'), {
-      target: { value: '1' },
-    });
-    fireEvent.change(screen.getByPlaceholderText('Enter marks'), {
-      target: { value: '20' },
-    });
-    fireEvent.click(screen.getByText('Add Student'));
+  const availableVersions = {
+    app: ['1.0.0', '1.0.1', '1.1.0', '2.0.0'],
+    libA: ['1.0.0', '1.1.0', '2.0.0'],
+  };
 
-    fireEvent.change(screen.getByPlaceholderText('Enter roll number'), {
-      target: { value: '3' },
-    });
-    fireEvent.change(screen.getByPlaceholderText('Enter marks'), {
-      target: { value: '34' },
-    });
-    fireEvent.click(screen.getByText('Add Student'));
+  const libDependencies = {
+    app: {
+      '1.0.0': { libA: '~1.0.0' },
+      '1.1.0': { libA: '^1.0.0' },
+    },
+    libA: {
+      '1.0.0': {},
+      '1.1.0': {},
+    },
+  };
 
-    fireEvent.change(screen.getByPlaceholderText('Enter roll number'), {
-      target: { value: '2' },
-    });
-    fireEvent.change(screen.getByPlaceholderText('Enter marks'), {
-      target: { value: '64' },
-    });
-    fireEvent.click(screen.getByText('Add Student'));
+  expect(
+    countUniqueLibraries(dependencies, availableVersions, libDependencies)
+  ).toBe(2);
+});
 
-    const rows = screen.getAllByRole('row');
-    expect(rows[1].textContent).toBe('120');
-    expect(rows[2].textContent).toBe('334');
-    expect(rows[3].textContent).toBe('264');
-  });
+test('Test Case 2', () => {
+  const dependencies = {
+    app: '1.0.0',
+  };
 
-  test('should be able to edit existing entry in the table', () => {
-    render(<App />);
+  const availableVersions = {
+    app: ['1.0.0', '2.0.0'],
+  };
 
-    fireEvent.change(screen.getByPlaceholderText('Enter roll number'), {
-      target: { value: '1' },
-    });
-    fireEvent.change(screen.getByPlaceholderText('Enter marks'), {
-      target: { value: '20' },
-    });
-    fireEvent.click(screen.getByText('Add Student'));
+  const libDependencies = {
+    app: {
+      '1.0.0': {},
+    },
+  };
 
-    let rows = screen.getAllByRole('row');
-    expect(rows[1].textContent).toBe('120');
-
-    fireEvent.change(screen.getByPlaceholderText('Enter roll number'), {
-      target: { value: '1' },
-    });
-    fireEvent.change(screen.getByPlaceholderText('Enter marks'), {
-      target: { value: '22' },
-    });
-    fireEvent.click(screen.getByText('Add Student'));
-
-    rows = screen.getAllByRole('row');
-    expect(rows[1].textContent).toBe('122');
-  });
-
-  test('the number of entries in the table should be same after adding and updating', () => {
-    render(<App />);
-
-    fireEvent.change(screen.getByPlaceholderText('Enter roll number'), {
-      target: { value: '1' },
-    });
-    fireEvent.change(screen.getByPlaceholderText('Enter marks'), {
-      target: { value: '20' },
-    });
-    fireEvent.click(screen.getByText('Add Student'));
-
-    fireEvent.change(screen.getByPlaceholderText('Enter roll number'), {
-      target: { value: '2' },
-    });
-    fireEvent.change(screen.getByPlaceholderText('Enter marks'), {
-      target: { value: '40' },
-    });
-    fireEvent.click(screen.getByText('Add Student'));
-
-    fireEvent.change(screen.getByPlaceholderText('Enter roll number'), {
-      target: { value: '1' },
-    });
-    fireEvent.change(screen.getByPlaceholderText('Enter marks'), {
-      target: { value: '34' },
-    });
-    fireEvent.click(screen.getByText('Add Student'));
-
-    const rows = screen.getAllByRole('row');
-    expect(rows.length).toBe(3);
-  });
+  expect(
+    countUniqueLibraries(dependencies, availableVersions, libDependencies)
+  ).toBe(1);
 });

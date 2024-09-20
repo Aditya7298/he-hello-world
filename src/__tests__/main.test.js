@@ -1,72 +1,139 @@
-import App from '../App';
-import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom';
+const { countUniqueLibraries } = require('../App');
 
-describe('Running tests', () => {
-  test('1', () => {
-    render(<App />);
+test('Test Case 1', () => {
+  const dependencies = {
+    libX: '^2.1.0',
+  };
 
-    fireEvent.change(screen.getByPlaceholderText('Enter roll number'), {
-      target: { value: '101' },
-    });
-    fireEvent.change(screen.getByPlaceholderText('Enter marks'), {
-      target: { value: '85' },
-    });
-    fireEvent.click(screen.getByText('Add Student'));
+  const availableVersions = {
+    libX: ['2.1.0', '2.1.1', '2.2.0', '3.0.0'],
+  };
 
-    fireEvent.change(screen.getByPlaceholderText('Enter roll number'), {
-      target: { value: '34' },
-    });
-    fireEvent.change(screen.getByPlaceholderText('Enter marks'), {
-      target: { value: '90' },
-    });
-    fireEvent.click(screen.getByText('Add Student'));
+  const libDependencies = {
+    libX: {
+      '2.1.0': {},
+      '2.1.1': {},
+      '2.2.0': {},
+      '3.0.0': {},
+    },
+  };
 
-    fireEvent.change(screen.getByPlaceholderText('Enter roll number'), {
-      target: { value: '101' },
-    });
-    fireEvent.change(screen.getByPlaceholderText('Enter marks'), {
-      target: { value: '99' },
-    });
-    fireEvent.click(screen.getByText('Add Student'));
+  expect(
+    countUniqueLibraries(dependencies, availableVersions, libDependencies)
+  ).toBe(1);
+});
 
-    const rows = screen.getAllByRole('row');
-    expect(rows[1].textContent).toBe('10199');
-    expect(rows[2].textContent).toBe('3490');
-    expect(rows.length).toBe(3);
-  });
+test('Test Case 2', () => {
+  const dependencies = {
+    app: '^1.0.0',
+  };
 
-  test('2', () => {
-    render(<App />);
+  const availableVersions = {
+    app: ['1.0.0', '1.0.1', '1.1.0', '2.0.0'],
+    libA: ['1.0.0', '1.0.1', '1.1.0'],
+    libB: ['1.0.0', '1.0.1', '1.1.0'],
+    libC: ['1.0.0'],
+  };
 
-    fireEvent.change(screen.getByPlaceholderText('Enter roll number'), {
-      target: { value: '101' },
-    });
-    fireEvent.change(screen.getByPlaceholderText('Enter marks'), {
-      target: { value: '85' },
-    });
-    fireEvent.click(screen.getByText('Add Student'));
+  const libDependencies = {
+    app: {
+      '1.1.0': { libA: '^1.0.0' },
+    },
+    libA: {
+      '1.0.0': { libB: '~1.0.0' },
+      '1.0.1': { libB: '~1.0.0' },
+      '1.1.0': { libB: '~1.0.0' },
+    },
+    libB: {
+      '1.0.0': {},
+      '1.0.1': {
+        libC: '1.0.0',
+      },
+    },
+  };
 
-    fireEvent.change(screen.getByPlaceholderText('Enter roll number'), {
-      target: { value: '1' },
-    });
-    fireEvent.change(screen.getByPlaceholderText('Enter marks'), {
-      target: { value: '35' },
-    });
-    fireEvent.click(screen.getByText('Add Student'));
+  expect(
+    countUniqueLibraries(dependencies, availableVersions, libDependencies)
+  ).toBe(4);
+});
 
-    let rows = screen.getAllByRole('row');
-    expect(rows[1].textContent).toBe('10185');
+test('Test Case 3', () => {
+  const dependencies = {
+    libA: '1.0.0',
+  };
 
-    fireEvent.change(screen.getByPlaceholderText('Enter roll number'), {
-      target: { value: '101' },
-    });
-    fireEvent.change(screen.getByPlaceholderText('Enter marks'), {
-      target: { value: '90' },
-    });
-    fireEvent.click(screen.getByText('Add Student'));
+  const availableVersions = {
+    libA: ['1.0.0', '1.1.0', '2.0.0'],
+    libB: ['1.0.0', '2.0.0'],
+  };
 
-    rows = screen.getAllByRole('row');
-    expect(rows[1].textContent).toBe('10190');
-  });
+  const libDependencies = {
+    libA: {
+      '1.0.0': { libB: '1.0.0' },
+    },
+    libB: {
+      '1.0.0': {},
+      '2.0.0': {},
+    },
+  };
+
+  expect(
+    countUniqueLibraries(dependencies, availableVersions, libDependencies)
+  ).toBe(2);
+});
+
+test('Test Case 4', () => {
+  const dependencies = {
+    libA: '^1.0.0',
+    libD: '~2.0.0',
+  };
+
+  const availableVersions = {
+    libA: ['1.0.0', '1.1.0', '1.2.0', '2.0.0'],
+    libB: ['1.0.0', '1.0.1', '1.1.0', '2.0.0'],
+    libC: ['1.0.0', '1.0.1', '1.1.0'],
+    libD: ['2.0.0', '2.0.1', '2.1.0'],
+    libE: ['1.0.0', '1.1.0', '1.2.0'],
+    libF: ['1.0.0', '1.1.0', '2.0.0'],
+    libG: ['1.0.0', '1.1.0', '1.1.1'],
+  };
+
+  const libDependencies = {
+    libA: {
+      '1.0.0': { libB: '^1.0.0', libC: '~1.0.0' },
+      '1.1.0': { libB: '~1.0.1' },
+      '1.2.0': { libD: '^2.0.0' },
+    },
+    libB: {
+      '1.0.0': { libE: '~1.0.0' },
+      '1.1.0': { libF: '^1.0.0' },
+    },
+    libC: {
+      '1.0.0': {},
+      '1.0.1': { libE: '^1.1.0' },
+      '1.1.0': { libG: '~1.0.0' },
+    },
+    libD: {
+      '2.0.1': { libE: '~1.1.0' },
+      '2.1.0': { libF: '^1.1.0' },
+    },
+    libE: {
+      '1.0.0': {},
+      '1.1.0': { libG: '~1.1.0' },
+      '1.2.0': { libG: '~1.1.0' },
+    },
+    libF: {
+      '1.1.0': {},
+      '2.0.0': {},
+    },
+    libG: {
+      '1.0.0': {},
+      '1.1.0': {},
+      '1.1.1': {},
+    },
+  };
+
+  expect(
+    countUniqueLibraries(dependencies, availableVersions, libDependencies)
+  ).toBe(6);
 });
